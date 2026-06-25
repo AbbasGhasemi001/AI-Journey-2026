@@ -2,11 +2,32 @@ import json
 from datetime import datetime
 
 
+# ===== User =====
+
+try:
+    with open("user.json", "r") as file:
+        user = json.load(file)
+
+    name = user["name"]
+
+except (FileNotFoundError, json.JSONDecodeError):
+
+    name = input("Enter your name: ")
+
+    user = {
+        "name": name
+    }
+
+    with open("user.json", "w") as file:
+        json.dump(user, file, indent=4)
+
+
+# ===== Main Program =====
+
 while True:
 
-    name = input("\nEnter your name: ")
-
     print(f"\n===== AI Study Assistant | {name} =====")
+
     print("1. Add Study Session")
     print("2. View Study Sessions")
     print("3. Add Goal")
@@ -17,9 +38,9 @@ while True:
     choice = input("Enter your choice: ")
 
 
-    # ===============================
+    # =====================
     # Add Study Session
-    # ===============================
+    # =====================
 
     if choice == "1":
 
@@ -32,7 +53,6 @@ while True:
         )
 
         session = {
-
             "subject": subject,
             "hours": hours,
             "date": date,
@@ -71,9 +91,9 @@ while True:
         print("Study session saved!")
 
 
-    # ===============================
+    # =====================
     # View Sessions
-    # ===============================
+    # =====================
 
     elif choice == "2":
 
@@ -112,16 +132,19 @@ while True:
                     f"Mood: {session['mood']}"
                 )
 
-        except FileNotFoundError:
+        except (
+            FileNotFoundError,
+            json.JSONDecodeError
+        ):
 
             print(
                 "No study sessions found!"
             )
 
 
-    # ===============================
+    # =====================
     # Add Goal
-    # ===============================
+    # =====================
 
     elif choice == "3":
 
@@ -130,11 +153,10 @@ while True:
         )
 
         deadline = input(
-            "Deadline (YYYY-MM-DD): "
+            "Deadline: "
         )
 
         goal = {
-
             "goal": goal_name,
             "deadline": deadline
         }
@@ -173,9 +195,9 @@ while True:
         print("Goal saved!")
 
 
-    # ===============================
+    # =====================
     # View Goals
-    # ===============================
+    # =====================
 
     elif choice == "4":
 
@@ -208,16 +230,19 @@ while True:
                     f"Deadline: {goal['deadline']}"
                 )
 
-        except FileNotFoundError:
+        except (
+            FileNotFoundError,
+            json.JSONDecodeError
+        ):
 
             print(
                 "No goals found!"
             )
 
 
-    # ===============================
+    # =====================
     # Analyze Progress
-    # ===============================
+    # =====================
 
     elif choice == "5":
 
@@ -245,10 +270,7 @@ while True:
                     session["subject"]
                 )
 
-                if (
-                    subject
-                    not in subjects
-                ):
+                if subject not in subjects:
 
                     subjects[
                         subject
@@ -261,8 +283,8 @@ while True:
                 ]
 
             average = (
-                total_hours
-                / len(data)
+                total_hours /
+                len(data)
             )
 
             most_subject = max(
@@ -270,7 +292,7 @@ while True:
                 key=subjects.get
             )
 
-            # ===== STREAK =====
+            # ===== Streak =====
 
             dates = []
 
@@ -305,10 +327,7 @@ while True:
                     - dates[i-1]
                 )
 
-                if (
-                    difference.days
-                    == 1
-                ):
+                if difference.days == 1:
 
                     streak += 1
 
@@ -316,14 +335,10 @@ while True:
 
                     streak = 1
 
-                if (
-                    streak
-                    > max_streak
-                ):
+                if streak > max_streak:
 
-                    max_streak = (
-                        streak
-                    )
+                    max_streak = streak
+
 
             print(
                 "\n===== Analysis ====="
@@ -345,7 +360,10 @@ while True:
                 f"Study Streak: {max_streak} days 🔥"
             )
 
-        except FileNotFoundError:
+        except (
+            FileNotFoundError,
+            json.JSONDecodeError
+        ):
 
             print(
                 "No study data found!"
@@ -355,14 +373,11 @@ while True:
     elif choice == "6":
 
         print(
-            "\nGoodbye 👋"
+            f"\nGoodbye {name} 👋"
         )
 
         break
 
-
     else:
 
-        print(
-            "Invalid choice!"
-        )
+        print("Invalid choice!")
