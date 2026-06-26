@@ -23,123 +23,99 @@ except (FileNotFoundError, json.JSONDecodeError):
 
 
 # ===== Main Program =====
+def show_main ():
 
-while True:
-
-    print(f"\n===== AI Study Assistant | {name} =====")
-
+    
     print("1. Add Study Session")
     print("2. View Study Sessions")
     print("3. Add Goal")
     print("4. View Goals")
     print("5. Analyze Progress")
-    print("6. Exit")
+    print("6.search seasion")
+    print("7. Exit")
+def load_sessions():
+    try:
+        with open("session.json", "r") as file:
+            data = json.load(file)
 
+        return data
+
+    except (FileNotFoundError, json.JSONDecodeError):
+        return []
+def save_sessions(data):
+    with open("session.json", "w") as file:
+        json.dump(data, file, indent=4)
+def add_study_session():
+        
+    
+        subject = input("Subject: ")
+        hours = float(input("Study Hours: "))
+        mood = input("Mood: ")
+
+        date = datetime.now().strftime("%Y-%m-%d")
+
+        session = {
+        "subject": subject,
+        "hours": hours,
+        "date": date,
+        "mood": mood
+        }
+
+        data = load_sessions()
+        data.append(session)
+        save_sessions(data)
+
+        print("Study session saved!")
+def view_study_sessions():
+
+    data = load_sessions()
+
+    if len(data) == 0:
+
+        print("No study sessions found!")
+
+    else:
+
+        print("\n===== Study History =====")
+
+        for session in data:
+
+            print("\n----------------")
+
+            print(
+                f"Subject: {session['subject']}"
+            )
+
+            print(
+                f"Hours: {session['hours']}"
+            )
+
+            print(
+                f"Date: {session['date']}"
+            )
+
+            print(
+                f"Mood: {session['mood']}"
+            )
+while True:
+
+    print(f"\n===== AI Study Assistant | {name} =====")
+    show_main()
     choice = input("Enter your choice: ")
 
 
     # =====================
     # Add Study Session
     # =====================
-
     if choice == "1":
-
-        subject = input("Subject: ")
-        hours = float(input("Study Hours: "))
-        mood = input("Mood: ")
-
-        date = datetime.now().strftime(
-            "%Y-%m-%d"
-        )
-
-        session = {
-            "subject": subject,
-            "hours": hours,
-            "date": date,
-            "mood": mood
-        }
-
-        try:
-
-            with open(
-                "session.json",
-                "r"
-            ) as file:
-
-                data = json.load(file)
-
-        except (
-            FileNotFoundError,
-            json.JSONDecodeError
-        ):
-
-            data = []
-
-        data.append(session)
-
-        with open(
-            "session.json",
-            "w"
-        ) as file:
-
-            json.dump(
-                data,
-                file,
-                indent=4
-            )
-
-        print("Study session saved!")
-
+        add_study_session()
 
     # =====================
     # View Sessions
     # =====================
 
     elif choice == "2":
-
-        try:
-
-            with open(
-                "session.json",
-                "r"
-            ) as file:
-
-                data = json.load(file)
-
-            print(
-                "\n===== Study History ====="
-            )
-
-            for session in data:
-
-                print(
-                    "\n----------------"
-                )
-
-                print(
-                    f"Subject: {session['subject']}"
-                )
-
-                print(
-                    f"Hours: {session['hours']}"
-                )
-
-                print(
-                    f"Date: {session['date']}"
-                )
-
-                print(
-                    f"Mood: {session['mood']}"
-                )
-
-        except (
-            FileNotFoundError,
-            json.JSONDecodeError
-        ):
-
-            print(
-                "No study sessions found!"
-            )
+        view_study_sessions()
 
 
     # =====================
@@ -368,9 +344,27 @@ while True:
             print(
                 "No study data found!"
             )
-
-
+    #======================
+    #search seasions
+    #======================
     elif choice == "6":
+        search = input("Enter subject to search: ")
+
+        with open("session.json", "r") as file:
+             data = json.load(file)
+
+        found = False
+
+        for session in data:
+             if search.lower() in session.get("subject", "").lower():
+                print(session)
+                found = True
+
+        if not found:
+                print("No session found.")
+
+
+    elif choice == "7":
 
         print(
             f"\nGoodbye {name} 👋"

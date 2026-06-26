@@ -1,0 +1,32 @@
+[
+    {
+        "subject": "python/Ai",
+        "hours": 2.0,
+        "date": "2026-06-25",
+        "mood": "nice !"
+    },
+    {
+        "subject": "python/Ai",
+        "hours": 2.0,
+        "date": "2026-06-25",
+        "mood": "nice!"
+    },
+    {
+        "subject": "python",
+        "hours": 2.0,
+        "date": "2026-06-26",
+        "mood": "good"
+    },
+    {
+        "subject": "reading book",
+        "hours": 1.0,
+        "date": "2026-06-26",
+        "mood": "not bad"
+    },
+    {
+        "subject": "english",
+        "hours": 1.0,
+        "date": "2026-06-26",
+        "mood": "not bad"
+    }
+]
