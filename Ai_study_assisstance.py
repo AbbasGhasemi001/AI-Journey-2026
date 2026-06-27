@@ -97,6 +97,45 @@ def view_study_sessions():
             print(
                 f"Mood: {session['mood']}"
             )
+def load_goals():
+    
+
+    try:
+        with open("goal.json","r")as file:
+            goals =json.load(file)
+        return goals
+    except (FileNotFoundError,json.JSONDecodeError):
+        return []
+def save_goals(goals):
+    with open ("goal.json","w")as file :
+        json.dump(goals,file,indent=4)
+def add_goal():
+
+    goal_name = input("Enter Goal: ")
+    deadline = input("Deadline: ")
+
+    goal = {
+        "goal": goal_name,
+        "deadline": deadline
+    }
+
+    goals = load_goals()
+    goals.append(goal)
+    save_goals(goals)
+
+    print("Goal saved!")
+def view_goals():
+    goals=load_goals()
+    if len(goals)==0:
+        print("No goals found !")
+    else:
+        print("\n=================goals====================")
+        for goal in goals:
+            print ("\n---------------------")
+            print(
+                f"Goal :{goal['goal']}"
+            )
+            print (f"Deadline:'{goal['deadline']}")
 while True:
 
     print(f"\n===== AI Study Assistant | {name} =====")
@@ -124,51 +163,7 @@ while True:
 
     elif choice == "3":
 
-        goal_name = input(
-            "Enter Goal: "
-        )
-
-        deadline = input(
-            "Deadline: "
-        )
-
-        goal = {
-            "goal": goal_name,
-            "deadline": deadline
-        }
-
-        try:
-
-            with open(
-                "goal.json",
-                "r"
-            ) as file:
-
-                goals = json.load(
-                    file
-                )
-
-        except (
-            FileNotFoundError,
-            json.JSONDecodeError
-        ):
-
-            goals = []
-
-        goals.append(goal)
-
-        with open(
-            "goal.json",
-            "w"
-        ) as file:
-
-            json.dump(
-                goals,
-                file,
-                indent=4
-            )
-
-        print("Goal saved!")
+      add_goal()
 
 
     # =====================
@@ -176,45 +171,7 @@ while True:
     # =====================
 
     elif choice == "4":
-
-        try:
-
-            with open(
-                "goal.json",
-                "r"
-            ) as file:
-
-                goals = json.load(
-                    file
-                )
-
-            print(
-                "\n===== Goals ====="
-            )
-
-            for goal in goals:
-
-                print(
-                    "\n----------------"
-                )
-
-                print(
-                    f"Goal: {goal['goal']}"
-                )
-
-                print(
-                    f"Deadline: {goal['deadline']}"
-                )
-
-        except (
-            FileNotFoundError,
-            json.JSONDecodeError
-        ):
-
-            print(
-                "No goals found!"
-            )
-
+        view_goals()
 
     # =====================
     # Analyze Progress
