@@ -135,12 +135,82 @@ def view_goals():
             print(
                 f"Goal :{goal['goal']}"
             )
-            print (f"Deadline:'{goal['deadline']}")
+            print (f"Deadline:{goal['deadline']}")
+def analyze_progress():
+    
+    data = load_sessions()
+
+    if len(data) == 0:
+
+        print("No data found!")
+
+    else:
+
+        total_hours = 0
+        subjects = {}
+
+        for session in data:
+
+            total_hours += session["hours"]
+
+            subject = session["subject"]
+
+            if subject not in subjects:
+
+                subjects[subject] = 0
+
+            subjects[subject] += session["hours"]
+
+        average = total_hours / len(data)
+
+        most_subject = max(
+            subjects,
+            key=subjects.get
+        )
+
+        print("\n============== Analyze ===================")
+        print(f"Total Hours: {total_hours}")
+        print(f"Average Hours: {average:.1f}")
+        print(f"Most Studied Subject: {most_subject}")
+        dates = []
+
+    for session in data:
+        dates.append(session["date"])
+
+    
+    dates = [
+    datetime.strptime(date, "%Y-%m-%d")
+    for date in dates
+]
+    dates.sort()
+    streak = 1
+    max_streak = 1
+
+    for i in range(1, len(dates)):
+
+        difference = dates[i] - dates[i - 1]
+
+    if difference.days == 1:
+
+        streak += 1
+
+    else:
+
+        streak = 1
+
+    if streak > max_streak:
+
+        max_streak = streak
+    print(f"Study Streak: {max_streak} days 🔥")
+
+
+
 while True:
 
     print(f"\n===== AI Study Assistant | {name} =====")
     show_main()
     choice = input("Enter your choice: ")
+
 
 
     # =====================
@@ -178,129 +248,12 @@ while True:
     # =====================
 
     elif choice == "5":
+        analyze_progress()
+            
+     # ===== Streak =====
 
-        try:
-
-            with open(
-                "session.json",
-                "r"
-            ) as file:
-
-                data = json.load(
-                    file
-                )
-
-            total_hours = 0
-            subjects = {}
-
-            for session in data:
-
-                total_hours += (
-                    session["hours"]
-                )
-
-                subject = (
-                    session["subject"]
-                )
-
-                if subject not in subjects:
-
-                    subjects[
-                        subject
-                    ] = 0
-
-                subjects[
-                    subject
-                ] += session[
-                    "hours"
-                ]
-
-            average = (
-                total_hours /
-                len(data)
-            )
-
-            most_subject = max(
-                subjects,
-                key=subjects.get
-            )
-
-            # ===== Streak =====
-
-            dates = []
-
-            for session in data:
-
-                dates.append(
-                    session["date"]
-                )
-
-            dates = [
-
-                datetime.strptime(
-                    date,
-                    "%Y-%m-%d"
-                )
-
-                for date in dates
-            ]
-
-            dates.sort()
-
-            streak = 1
-            max_streak = 1
-
-            for i in range(
-                1,
-                len(dates)
-            ):
-
-                difference = (
-                    dates[i]
-                    - dates[i-1]
-                )
-
-                if difference.days == 1:
-
-                    streak += 1
-
-                else:
-
-                    streak = 1
-
-                if streak > max_streak:
-
-                    max_streak = streak
-
-
-            print(
-                "\n===== Analysis ====="
-            )
-
-            print(
-                f"Total Hours: {total_hours}"
-            )
-
-            print(
-                f"Average Hours: {average:.1f}"
-            )
-
-            print(
-                f"Most Studied Subject: {most_subject}"
-            )
-
-            print(
-                f"Study Streak: {max_streak} days 🔥"
-            )
-
-        except (
-            FileNotFoundError,
-            json.JSONDecodeError
-        ):
-
-            print(
-                "No study data found!"
-            )
+        
+       
     #======================
     #search seasions
     #======================
