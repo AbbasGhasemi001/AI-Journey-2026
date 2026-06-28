@@ -31,7 +31,7 @@ def show_main ():
     print("3. Add Goal")
     print("4. View Goals")
     print("5. Analyze Progress")
-    print("6.search seasion")
+    print("6.Search Sesion")
     print("7. Exit")
 def load_sessions():
     try:
@@ -137,7 +137,7 @@ def view_goals():
             )
             print (f"Deadline:{goal['deadline']}")
 def analyze_progress():
-    
+
     data = load_sessions()
 
     if len(data) == 0:
@@ -168,40 +168,72 @@ def analyze_progress():
             key=subjects.get
         )
 
+        dates = []
+
+        for session in data:
+
+            dates.append(session["date"])
+
+        dates = [
+            datetime.strptime(date, "%Y-%m-%d")
+            for date in dates
+        ]
+
+        dates.sort()
+
+        streak = 1
+        max_streak = 1
+
+        for i in range(1, len(dates)):
+
+            difference = dates[i] - dates[i - 1]
+
+            if difference.days == 1:
+
+                streak += 1
+
+            elif difference.days == 0:
+
+                continue
+
+            else:
+
+                streak = 1
+
+            if streak > max_streak:
+
+                max_streak = streak
+
         print("\n============== Analyze ===================")
         print(f"Total Hours: {total_hours}")
         print(f"Average Hours: {average:.1f}")
         print(f"Most Studied Subject: {most_subject}")
-        dates = []
+        print(f"Study Streak: {max_streak} days 🔥")
+def search_sessions():
+
+    search = input("Enter subject to search: ")
+
+    data = load_sessions()
+
+    found = False
+
+    print("\n===== Search Results =====")
 
     for session in data:
-        dates.append(session["date"])
 
-    
-    dates = [
-    datetime.strptime(date, "%Y-%m-%d")
-    for date in dates
-]
-    dates.sort()
-    streak = 1
-    max_streak = 1
+        if search.lower() in session.get("subject", "").lower():
 
-    for i in range(1, len(dates)):
+            print("\n----------------")
+            print(f"Subject: {session['subject']}")
+            print(f"Hours: {session['hours']}")
+            print(f"Date: {session['date']}")
+            print(f"Mood: {session['mood']}")
 
-        difference = dates[i] - dates[i - 1]
+            found = True
 
-    if difference.days == 1:
+    if not found:
 
-        streak += 1
-
-    else:
-
-        streak = 1
-
-    if streak > max_streak:
-
-        max_streak = streak
-    print(f"Study Streak: {max_streak} days 🔥")
+        print("No session found.")
 
 
 
@@ -250,7 +282,6 @@ while True:
     elif choice == "5":
         analyze_progress()
             
-     # ===== Streak =====
 
         
        
@@ -258,20 +289,7 @@ while True:
     #search seasions
     #======================
     elif choice == "6":
-        search = input("Enter subject to search: ")
-
-        with open("session.json", "r") as file:
-             data = json.load(file)
-
-        found = False
-
-        for session in data:
-             if search.lower() in session.get("subject", "").lower():
-                print(session)
-                found = True
-
-        if not found:
-                print("No session found.")
+        search_sessions()
 
 
     elif choice == "7":

@@ -28,5 +28,11 @@
         "hours": 1.0,
         "date": "2026-06-26",
         "mood": "not bad"
+    },
+    {
+        "subject": "python/ai",
+        "hours": 1.0,
+        "date": "2026-06-28",
+        "mood": "bad"
     }
 ]
