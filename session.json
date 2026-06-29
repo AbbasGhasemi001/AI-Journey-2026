@@ -18,21 +18,9 @@
         "mood": "good"
     },
     {
-        "subject": "reading book",
-        "hours": 1.0,
-        "date": "2026-06-26",
-        "mood": "not bad"
-    },
-    {
-        "subject": "english",
-        "hours": 1.0,
-        "date": "2026-06-26",
-        "mood": "not bad"
-    },
-    {
         "subject": "python/ai",
-        "hours": 1.0,
-        "date": "2026-06-28",
-        "mood": "bad"
+        "hours": 1.5,
+        "date": "2026-06-29",
+        "mood": "nice!"
     }
 ]

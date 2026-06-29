@@ -31,8 +31,9 @@ def show_main ():
     print("3. Add Goal")
     print("4. View Goals")
     print("5. Analyze Progress")
-    print("6.Search Sesion")
-    print("7. Exit")
+    print("6. Search Sesion")
+    print("7. Delete Session")
+    print("8. Exit")
 def load_sessions():
     try:
         with open("session.json", "r") as file:
@@ -234,9 +235,32 @@ def search_sessions():
     if not found:
 
         print("No session found.")
+def delete_session():
 
+    data = load_sessions()
 
+    if len(data) == 0:
 
+        print("No study sessions found!")
+
+    else:
+
+        print("\n===== Delete Session =====")
+
+        for i, session in enumerate(data, start=1):
+
+            print(
+                f"{i}. {session['subject']} | {session['hours']} hours | {session['date']}"
+            )
+        number =int(input("Enter session number:"))
+        index=number-1
+        if index>=0 and index<len(data):
+                deleted_session=data.pop(index)
+                save_sessions(data)
+                print (f"Deleted :   {deleted_session['subject']}   |   {deleted_session['hours']}   |   {deleted_session['date']}")
+        else :
+                print('Invalid number!')
+    
 while True:
 
     print(f"\n===== AI Study Assistant | {name} =====")
@@ -290,9 +314,16 @@ while True:
     #======================
     elif choice == "6":
         search_sessions()
+    
+    #======================
+    #Delete session
+    #======================
+    elif choice=="7":
+        delete_session()
 
 
-    elif choice == "7":
+    #bye==========bye
+    elif choice == "8":
 
         print(
             f"\nGoodbye {name} 👋"
