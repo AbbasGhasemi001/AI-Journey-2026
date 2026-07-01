@@ -18,9 +18,15 @@
         "mood": "good"
     },
     {
-        "subject": "python/ai",
-        "hours": 1.5,
+        "subject": "python",
+        "hours": 2.0,
         "date": "2026-06-29",
-        "mood": "nice!"
+        "mood": "good"
+    },
+    {
+        "subject": "python/ai",
+        "hours": 1.0,
+        "date": "2026-06-30",
+        "mood": "good"
     }
 ]

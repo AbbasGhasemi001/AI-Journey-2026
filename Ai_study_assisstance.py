@@ -31,9 +31,10 @@ def show_main ():
     print("3. Add Goal")
     print("4. View Goals")
     print("5. Analyze Progress")
-    print("6. Search Sesion")
-    print("7. Delete Session")
-    print("8. Exit")
+    print("6. Search Session")
+    print("7. Edit Session")
+    print("8. Delete Session")
+    print("9. Exit")
 def load_sessions():
     try:
         with open("session.json", "r") as file:
@@ -204,12 +205,14 @@ def analyze_progress():
             if streak > max_streak:
 
                 max_streak = streak
+            study_score=(total_hours*2) + (max_streak*5)+len(data)
 
         print("\n============== Analyze ===================")
         print(f"Total Hours: {total_hours}")
         print(f"Average Hours: {average:.1f}")
         print(f"Most Studied Subject: {most_subject}")
         print(f"Study Streak: {max_streak} days 🔥")
+        print(f"Study Score: {study_score:.1f} points 🏆")
 def search_sessions():
 
     search = input("Enter subject to search: ")
@@ -235,6 +238,79 @@ def search_sessions():
     if not found:
 
         print("No session found.")
+def edit_session():
+
+    data = load_sessions()
+
+    if len(data) == 0:
+
+        print("No study sessions found!")
+
+    else:
+
+        print("\n===== Edit Session =====")
+
+        for i, session in enumerate(data, start=1):
+
+            print(
+                f"{i}. {session['subject']} | {session['hours']} hours | {session['date']} | {session['mood']}"
+            )
+
+        try:
+            number = int(input("Enter session number to edit: "))
+
+        except ValueError:
+            print("Please enter a valid number!")
+            return
+
+        index = number - 1
+
+        if index >= 0 and index < len(data):
+
+            selected_session = data[index]
+
+            print("\nSelected Session:")
+            print(f"Subject: {selected_session['subject']}")
+            print(f"Hours: {selected_session['hours']}")
+            print(f"Date: {selected_session['date']}")
+            print(f"Mood: {selected_session['mood']}")
+
+            new_subject = input("Enter new subject: ")
+
+            try:
+                new_hours = float(input("Enter new hours: "))
+
+            except ValueError:
+                print("Please enter a valid number for hours!")
+                return
+
+            new_mood = input("Enter new mood: ")
+
+            selected_session["subject"] = new_subject
+            selected_session["hours"] = new_hours
+            selected_session["mood"] = new_mood
+
+            save_sessions(data)
+
+            print("Session updated successfully! ✅")
+
+        else:
+
+            print("Invalid number!")
+        index=number-1
+        if index >= 0 and index < len(data):
+
+            selected_session = data[index]
+
+            print("\nSelected Session:")
+            print(f"Subject: {selected_session['subject']}")
+            print(f"Hours: {selected_session['hours']}")
+            print(f"Date: {selected_session['date']}")
+            print(f"Mood: {selected_session['mood']}")
+
+        else:
+
+            print("Invalid number!")
 def delete_session():
 
     data = load_sessions()
@@ -314,16 +390,21 @@ while True:
     #======================
     elif choice == "6":
         search_sessions()
+    #======================
+    #edit session
+    #======================
+    elif choice=="7":
+        edit_session()
     
     #======================
     #Delete session
     #======================
-    elif choice=="7":
+    elif choice=="8":
         delete_session()
 
 
     #bye==========bye
-    elif choice == "8":
+    elif choice == "9":
 
         print(
             f"\nGoodbye {name} 👋"
