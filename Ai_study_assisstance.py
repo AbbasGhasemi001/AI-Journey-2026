@@ -1,4 +1,5 @@
 import json
+import matplotlib.pyplot as plt
 from datetime import datetime
 
 
@@ -31,10 +32,11 @@ def show_main ():
     print("3. Add Goal")
     print("4. View Goals")
     print("5. Analyze Progress")
-    print("6. Search Session")
-    print("7. Edit Session")
-    print("8. Delete Session")
-    print("9. Exit")
+    print("6. Show Daily Sessions Chart")
+    print("7. Search Session")
+    print("8. Edit Session")
+    print("9. Delete Session")
+    print("10. Exit")
 def load_sessions():
     try:
         with open("session.json", "r") as file:
@@ -336,6 +338,49 @@ def delete_session():
                 print (f"Deleted :   {deleted_session['subject']}   |   {deleted_session['hours']}   |   {deleted_session['date']}")
         else :
                 print('Invalid number!')
+def show_daily_sessions_chart():
+
+    data = load_sessions()
+
+    if len(data) == 0:
+
+        print("No study sessions found!")
+
+    else:
+
+        daily_counts = {}
+
+        for session in data:
+
+            date = session["date"]
+
+            if date not in daily_counts:
+
+                daily_counts[date] = 0
+
+            daily_counts[date] += 1
+
+        dates = sorted(daily_counts.keys())
+
+        counts = []
+
+        for date in dates:
+
+            counts.append(daily_counts[date])
+
+        plt.plot(dates, counts, marker="o")
+
+        plt.title("Study Sessions by Date")
+        plt.xlabel("Date")
+        plt.ylabel("Number of Sessions")
+
+        plt.grid(True)
+
+        plt.xticks(rotation=45)
+
+        plt.tight_layout()
+
+        plt.show()
     
 while True:
 
@@ -381,30 +426,34 @@ while True:
 
     elif choice == "5":
         analyze_progress()
+    #======================
+    #chart session
+    #======================
             
-
+    elif choice=="6":
+        show_daily_sessions_chart()
         
        
     #======================
     #search seasions
     #======================
-    elif choice == "6":
+    elif choice == "7":
         search_sessions()
     #======================
     #edit session
     #======================
-    elif choice=="7":
+    elif choice=="8":
         edit_session()
     
     #======================
     #Delete session
     #======================
-    elif choice=="8":
+    elif choice=="9":
         delete_session()
 
 
     #bye==========bye
-    elif choice == "9":
+    elif choice == "10":
 
         print(
             f"\nGoodbye {name} 👋"

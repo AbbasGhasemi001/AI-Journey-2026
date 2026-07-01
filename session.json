@@ -28,5 +28,17 @@
         "hours": 1.0,
         "date": "2026-06-30",
         "mood": "good"
+    },
+    {
+        "subject": "python/ai",
+        "hours": 2.0,
+        "date": "2026-07-01",
+        "mood": "nice"
+    },
+    {
+        "subject": "english",
+        "hours": 1.0,
+        "date": "2026-07-01",
+        "mood": "good"
     }
 ]
