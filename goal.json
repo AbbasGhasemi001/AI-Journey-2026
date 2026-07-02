@@ -6,5 +6,12 @@
     {
         "goal": "+30swim user",
         "deadline": "1405/07/06"
+    },
+    {
+        "goal": "python",
+        "start_date": "1405-04-11",
+        "deadline": "1405-07-11",
+        "status": "in progress",
+        "target_hours": 90.0
     }
 ]
