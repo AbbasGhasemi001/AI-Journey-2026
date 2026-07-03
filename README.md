@@ -1,3 +1,17 @@
 # AI Journey 2026
 
-My journey to become an AI Engineer and prepare for graduate studies.
+This repository documents my Python and AI learning journey.
+
+## Current Main Project
+
+- AI Study Assistant: a command-line Python app for tracking study sessions, managing goals, analyzing progress, and visualizing daily study activity.
+
+## Skills Practiced
+
+- Python basics
+- JSON file handling
+- Functions
+- Error handling
+- Data analysis
+- matplotlib charts
+- Git and GitHub
