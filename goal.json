@@ -13,5 +13,12 @@
         "deadline": "1405-07-11",
         "status": "in progress",
         "target_hours": 90.0
+    },
+    {
+        "goal": "test2",
+        "start_date": "2026-07-24",
+        "deadline": "2026-09-24",
+        "status": "in progres",
+        "target_hours": 28.0
     }
 ]
