@@ -13,7 +13,8 @@ class HabitTracker:
         print("2. View Habits")
         print("3. Mark Habit as Done")
         print("4. Veiw Habit History")
-        print("5. Exit")
+        print("5. Delete Habit")
+        print("6. Exit")
 
     def load_habits(self):
         try:
@@ -87,11 +88,31 @@ class HabitTracker:
         habits[index]["history"].append(today)
         self.save_habits(habits)
         print(f"{habits[index]['name']} marked as done for today!")
-
+    def delete_habit(self):
+        habits = self.load_habits()
+        if len(habits) == 0:
+            print("No data found !")
+            return
+        
+        self.view_habits()
+        try:
+            number = int(input("Enter habit number: "))
+        
+        except ValueError:
+            print("Please enter a valid number!")
+            return
+        index = number - 1
+        if index < 0 or index >= len(habits):
+                    print("Invalid habit number!")
+                    return
+        deleted_habit=habits.pop(index)
+        self.save_habits(habits)
+        print(f"{deleted_habit['name']} has been gone !")
+        
 
     def view_habits_history(self):
-        habits=self.load_habits()
-        if len(habits)==0:
+        habits = self.load_habits()
+        if len(habits) == 0:
             print("No data found !")
             return
         else:
@@ -102,11 +123,11 @@ class HabitTracker:
         except ValueError:
             print("Please enter a valid number!")
             return
-        index=number-1
+        index = number - 1
         if index < 0 or index >= len(habits):
             print("Invalid habit number!")
             return
-        habit=habits[index]
+        habit = habits[index]
         if len(habit["history"]) == 0:
             print(f"No history found for {habit['name']}!")
             return
@@ -125,9 +146,11 @@ class HabitTracker:
                 self.view_habits()
             elif choice == "3":
                 self.mark_done_today()
-            elif choice=="4":
+            elif choice == "4":
                 self.view_habits_history()
-            elif choice == "5":
+            elif choice =="5":
+                self.delete_habit()
+            elif choice == "6":
                 print("Goodbye 👋")
                 break
             else:
