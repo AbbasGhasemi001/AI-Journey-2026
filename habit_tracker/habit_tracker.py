@@ -14,7 +14,8 @@ class HabitTracker:
         print("3. Mark Habit as Done")
         print("4. Veiw Habit History")
         print("5. Delete Habit")
-        print("6. Exit")
+        print("6. Analyz Habits")
+        print("7. Exit")
 
     def load_habits(self):
         try:
@@ -135,6 +136,37 @@ class HabitTracker:
 
         for history_index, day in enumerate(habit["history"], start=1):
             print(f"{history_index}. {day}")
+    def analyze_habits(self):
+
+        habits = self.load_habits()
+
+        if len(habits) == 0:
+            print("No habits found!")
+            return
+
+        total_habits = len(habits)
+        total_done_days = 0
+
+        for habit in habits:
+            total_done_days += len(habit["history"])
+
+        most_consistent_habit = habits[0]
+        max_done_days = len(habits[0]["history"])
+
+        for habit in habits:
+            done_days = len(habit["history"])
+
+            if done_days > max_done_days:
+                max_done_days = done_days
+                most_consistent_habit = habit
+
+        average_done_days = total_done_days / total_habits
+
+        print("\n===== Habit Analysis =====")
+        print(f"Total Habits: {total_habits}")
+        print(f"Total Done Days: {total_done_days}")
+        print(f"Average Done Days per Habit: {average_done_days:.1f}")
+        print(f"Most Consistent Habit: {most_consistent_habit['name']} - {max_done_days} days")
 
     def run(self):
         while True:
@@ -150,7 +182,9 @@ class HabitTracker:
                 self.view_habits_history()
             elif choice =="5":
                 self.delete_habit()
-            elif choice == "6":
+            elif choice=="6":
+                self.analyze_habits()
+            elif choice == "7":
                 print("Goodbye 👋")
                 break
             else:
