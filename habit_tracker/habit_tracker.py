@@ -14,7 +14,7 @@ class HabitTracker:
         print("3. Mark Habit as Done")
         print("4. Veiw Habit History")
         print("5. Delete Habit")
-        print("6. Analyz Habits")
+        print("6. Analyze Habits")
         print("7. Exit")
 
     def load_habits(self):
@@ -89,29 +89,29 @@ class HabitTracker:
         habits[index]["history"].append(today)
         self.save_habits(habits)
         print(f"{habits[index]['name']} marked as done for today!")
+
     def delete_habit(self):
         habits = self.load_habits()
         if len(habits) == 0:
             print("No data found !")
             return
-        
+
         self.view_habits()
         try:
             number = int(input("Enter habit number: "))
-        
+
         except ValueError:
             print("Please enter a valid number!")
             return
         index = number - 1
         if index < 0 or index >= len(habits):
-                    print("Invalid habit number!")
-                    return
-        deleted_habit=habits.pop(index)
+            print("Invalid habit number!")
+            return
+        deleted_habit = habits.pop(index)
         self.save_habits(habits)
         print(f"{deleted_habit['name']} has been gone !")
-        
 
-    def view_habits_history(self):
+    def view_habit_history(self):
         habits = self.load_habits()
         if len(habits) == 0:
             print("No data found !")
@@ -136,6 +136,7 @@ class HabitTracker:
 
         for history_index, day in enumerate(habit["history"], start=1):
             print(f"{history_index}. {day}")
+
     def analyze_habits(self):
 
         habits = self.load_habits()
@@ -166,7 +167,9 @@ class HabitTracker:
         print(f"Total Habits: {total_habits}")
         print(f"Total Done Days: {total_done_days}")
         print(f"Average Done Days per Habit: {average_done_days:.1f}")
-        print(f"Most Consistent Habit: {most_consistent_habit['name']} - {max_done_days} days")
+        print(
+            f"Most Consistent Habit: {most_consistent_habit['name']} - {max_done_days} days"
+        )
 
     def run(self):
         while True:
@@ -179,10 +182,10 @@ class HabitTracker:
             elif choice == "3":
                 self.mark_done_today()
             elif choice == "4":
-                self.view_habits_history()
-            elif choice =="5":
+                self.view_habit_history()
+            elif choice == "5":
                 self.delete_habit()
-            elif choice=="6":
+            elif choice == "6":
                 self.analyze_habits()
             elif choice == "7":
                 print("Goodbye 👋")
