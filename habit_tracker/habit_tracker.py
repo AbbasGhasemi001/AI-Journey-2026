@@ -29,6 +29,26 @@ class HabitTracker:
         with open(self.file_name, "w") as file:
             json.dump(habits, file, indent=4)
 
+    def select_habits(self):
+        habits = self.load_habits()
+
+        if len(habits) == 0:
+            print("No habit found !")
+            return None, None
+        self.view_habits()
+
+        try:
+            number = int(input("Enter Habit number :"))
+        except ValueError:
+            print("Enter valid number !")
+            return None, None
+        index = number - 1
+        if index < 0 or index >= len(habits):
+            print("please enter valid habit number!")
+            return None, None
+
+        return habits, index
+
     def add_habit(self):
         habit_name = input("Enter your habit :").strip()
         if habit_name == "":
@@ -59,25 +79,8 @@ class HabitTracker:
 
     def mark_done_today(self):
 
-        habits = self.load_habits()
-
-        if len(habits) == 0:
-            print("No habits found!")
-            return
-
-        self.view_habits()
-
-        try:
-            number = int(input("Enter habit number: "))
-
-        except ValueError:
-            print("Please enter a valid number!")
-            return
-
-        index = number - 1
-
-        if index < 0 or index >= len(habits):
-            print("Invalid habit number!")
+        habits, index = self.select_habits()
+        if habits is None:
             return
 
         today = date.today().strftime("%Y-%m-%d")
@@ -91,42 +94,16 @@ class HabitTracker:
         print(f"{habits[index]['name']} marked as done for today!")
 
     def delete_habit(self):
-        habits = self.load_habits()
-        if len(habits) == 0:
-            print("No data found !")
-            return
-
-        self.view_habits()
-        try:
-            number = int(input("Enter habit number: "))
-
-        except ValueError:
-            print("Please enter a valid number!")
-            return
-        index = number - 1
-        if index < 0 or index >= len(habits):
-            print("Invalid habit number!")
+        habits, index = self.select_habits()
+        if habits is None:
             return
         deleted_habit = habits.pop(index)
         self.save_habits(habits)
-        print(f"{deleted_habit['name']} has been gone !")
+        print(f"{deleted_habit['name']} has been deleted !")
 
     def view_habit_history(self):
-        habits = self.load_habits()
-        if len(habits) == 0:
-            print("No data found !")
-            return
-        else:
-            self.view_habits()
-        try:
-            number = int(input("Enter habit number: "))
-
-        except ValueError:
-            print("Please enter a valid number!")
-            return
-        index = number - 1
-        if index < 0 or index >= len(habits):
-            print("Invalid habit number!")
+        habits, index = self.select_habits()
+        if habits is None:
             return
         habit = habits[index]
         if len(habit["history"]) == 0:
