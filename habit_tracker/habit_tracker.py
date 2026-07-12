@@ -2,7 +2,27 @@ import json
 from datetime import date
 
 
-# -------------------------------
+class Habit:
+    def __init__(self, name):
+        self.name = name
+        self.created_at = date.today().strftime("%Y-%m-%d")
+        self.history = []
+
+    def to_dict(self):
+        return {
+            "name": self.name,
+            "created_at": self.created_at,
+            "history": self.history,
+        }
+
+    @staticmethod
+    def from_dict(data):
+        habit = Habit(data["name"])
+        habit.created_at = data["created_at"]
+        habit.history = data["history"]
+        return habit
+
+
 class HabitTracker:
     def __init__(self):
         self.file_name = "habits.json"
@@ -12,110 +32,140 @@ class HabitTracker:
         print("1. Add Habit")
         print("2. View Habits")
         print("3. Mark Habit as Done")
-        print("4. Veiw Habit History")
+        print("4. View Habit History")
         print("5. Delete Habit")
         print("6. Analyze Habits")
         print("7. Exit")
 
     def load_habits(self):
         try:
-            with open(self.file_name, "r") as file:
-                habits = json.load(file)
-                return habits
+            with open(self.file_name, "r", encoding="utf-8") as file:
+                habit_data = json.load(file)
+
+            habit_objects = []
+
+            for data in habit_data:
+                habit = Habit.from_dict(data)
+                habit_objects.append(habit)
+
+            return habit_objects
+
         except (FileNotFoundError, json.JSONDecodeError):
             return []
 
     def save_habits(self, habits):
-        with open(self.file_name, "w") as file:
-            json.dump(habits, file, indent=4)
+        habit_data = []
 
-    def select_habits(self):
+        for habit in habits:
+            habit_data.append(habit.to_dict())
+
+        with open(self.file_name, "w", encoding="utf-8") as file:
+            json.dump(habit_data, file, indent=4, ensure_ascii=False)
+
+    def select_habit(self):
         habits = self.load_habits()
 
         if len(habits) == 0:
-            print("No habit found !")
+            print("No habits found!")
             return None, None
-        self.view_habits()
+
+        self.view_habits(habits)
 
         try:
-            number = int(input("Enter Habit number :"))
+            number = int(input("Enter habit number: "))
         except ValueError:
-            print("Enter valid number !")
+            print("Please enter a valid number!")
             return None, None
+
         index = number - 1
+
         if index < 0 or index >= len(habits):
-            print("please enter valid habit number!")
+            print("Invalid habit number!")
             return None, None
 
         return habits, index
 
     def add_habit(self):
-        habit_name = input("Enter your habit :").strip()
+        habit_name = input("Enter your habit: ").strip()
+
         if habit_name == "":
-            print("habit cannot be empty !")
+            print("Habit cannot be empty!")
             return
-        habit = {
-            "name": habit_name,
-            "created_at": date.today().strftime("%Y-%m-%d"),
-            "history": [],
-        }
+
         habits = self.load_habits()
-        habits.append(habit)
+
+        new_habit = Habit(habit_name)
+        habits.append(new_habit)
+
         self.save_habits(habits)
         print("Habit added successfully!")
 
-    def view_habits(self):
+    def view_habits(self, habits=None):
+        if habits is None:
+            habits = self.load_habits()
 
-        habits = self.load_habits()
         if len(habits) == 0:
-            print("no data found !")
-        else:
-            print("\n---------Habits-------------")
-            for index, habit in enumerate(habits, start=1):
-                print("\n--------------------------")
-                print(f"{index}.{habit['name']}")
-                print(f"created at: {habit['created_at']}")
-                print(f"Done days : {len(habit['history'])}")
+            print("No habits found!")
+            return
+
+        print("\n===== Habits =====")
+
+        for index, habit in enumerate(habits, start=1):
+            print("\n--------------------------")
+            print(f"{index}. {habit.name}")
+            print(f"Created at: {habit.created_at}")
+            print(f"Done days: {len(habit.history)}")
 
     def mark_done_today(self):
+        habits, index = self.select_habit()
 
-        habits, index = self.select_habits()
         if habits is None:
             return
 
         today = date.today().strftime("%Y-%m-%d")
+        selected_habit = habits[index]
 
-        if today in habits[index]["history"]:
+        if today in selected_habit.history:
             print("This habit is already marked as done today!")
             return
 
-        habits[index]["history"].append(today)
-        self.save_habits(habits)
-        print(f"{habits[index]['name']} marked as done for today!")
+        selected_habit.history.append(today)
 
-    def delete_habit(self):
-        habits, index = self.select_habits()
-        if habits is None:
-            return
-        deleted_habit = habits.pop(index)
         self.save_habits(habits)
-        print(f"{deleted_habit['name']} has been deleted !")
+        print(f"{selected_habit.name} marked as done for today!")
 
     def view_habit_history(self):
-        habits, index = self.select_habits()
+        habits, index = self.select_habit()
+
         if habits is None:
             return
-        habit = habits[index]
-        if len(habit["history"]) == 0:
-            print(f"No history found for {habit['name']}!")
-            return
-        print(f"\nHistory for {habit['name']}:")
 
-        for history_index, day in enumerate(habit["history"], start=1):
+        selected_habit = habits[index]
+
+        if len(selected_habit.history) == 0:
+            print(f"No history found for {selected_habit.name}!")
+            return
+
+        print(f"\nHistory for {selected_habit.name}:")
+
+        for history_index, day in enumerate(
+            selected_habit.history,
+            start=1,
+        ):
             print(f"{history_index}. {day}")
 
-    def analyze_habits(self):
+    def delete_habit(self):
+        habits, index = self.select_habit()
 
+        if habits is None:
+            return
+
+        deleted_habit = habits.pop(index)
+
+        self.save_habits(habits)
+        print(f"{deleted_habit.name} has been deleted!")
+
+    def analyze_habits(self):
         habits = self.load_habits()
 
         if len(habits) == 0:
@@ -126,13 +176,13 @@ class HabitTracker:
         total_done_days = 0
 
         for habit in habits:
-            total_done_days += len(habit["history"])
+            total_done_days += len(habit.history)
 
         most_consistent_habit = habits[0]
-        max_done_days = len(habits[0]["history"])
+        max_done_days = len(habits[0].history)
 
         for habit in habits:
-            done_days = len(habit["history"])
+            done_days = len(habit.history)
 
             if done_days > max_done_days:
                 max_done_days = done_days
@@ -145,31 +195,41 @@ class HabitTracker:
         print(f"Total Done Days: {total_done_days}")
         print(f"Average Done Days per Habit: {average_done_days:.1f}")
         print(
-            f"Most Consistent Habit: {most_consistent_habit['name']} - {max_done_days} days"
+            f"Most Consistent Habit: "
+            f"{most_consistent_habit.name} - {max_done_days} days"
         )
 
     def run(self):
         while True:
             self.show_main()
-            choice = input("enter your number :").strip()
+            choice = input("Enter your choice: ").strip()
+
             if choice == "1":
                 self.add_habit()
+
             elif choice == "2":
                 self.view_habits()
+
             elif choice == "3":
                 self.mark_done_today()
+
             elif choice == "4":
                 self.view_habit_history()
+
             elif choice == "5":
                 self.delete_habit()
+
             elif choice == "6":
                 self.analyze_habits()
+
             elif choice == "7":
                 print("Goodbye 👋")
                 break
+
             else:
-                print("invalid choice??!")
+                print("Invalid choice!")
 
 
-app = HabitTracker()
-app.run()
+if __name__ == "__main__":
+    app = HabitTracker()
+    app.run()
