@@ -36,7 +36,9 @@ This project allows users to create habits, track daily progress, view habit his
 ```text
 habit_tracker/
 │
-├── habit_tracker.py
+├── main.py
+├── habit.py
+├── tracker.py
 ├── habits.json
 └── README.md
 ```
