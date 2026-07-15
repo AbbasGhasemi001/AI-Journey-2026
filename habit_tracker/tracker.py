@@ -1,6 +1,8 @@
-import json 
+import json
 from datetime import date
 from habit import Habit
+
+
 class HabitTracker:
     def __init__(self):
         self.file_name = "habits.json"
