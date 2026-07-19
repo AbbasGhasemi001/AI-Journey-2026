@@ -1,0 +1,9 @@
+[
+    {
+        "amount": 5.0,
+        "category": "book",
+        "transaction_type": "income",
+        "description": "",
+        "created_at": "2026-07-19"
+    }
+]
