@@ -19,15 +19,8 @@ connection.commit()
 connection.close()
 
 
-def view_books():
-    connection = sqlite3.connect(database_path)
-    cursor = connection.cursor()
-
-    cursor.execute("SELECT * FROM books ORDER BY title ASC LIMIT 3")
-    books = cursor.fetchall()
-
-    connection.close()
-
+# ==========================
+def display_books(books):
     if not books:
         print("No books found.")
     else:
@@ -45,6 +38,18 @@ def add_book(title, author):
     connection.close()
 
     print("Book added successfully!")
+
+
+def view_books():
+    connection = sqlite3.connect(database_path)
+    cursor = connection.cursor()
+
+    cursor.execute("SELECT * FROM books ORDER BY title ASC ")
+    books = cursor.fetchall()
+
+    connection.close()
+
+    display_books(books)
 
 
 def update_book(book_id, new_title, new_author):
@@ -81,11 +86,7 @@ def search_books(keyword):
     books = cursor.fetchall()
     connection.close()
 
-    if not books:
-        print("No matching books found.")
-    else:
-        for book in books:
-            print(f"ID: {book[0]} | Title: {book[1]} | Author: {book[2]}")
+    display_books(books)
 
 
 def delete_book(book_id):
