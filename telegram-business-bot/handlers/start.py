@@ -6,6 +6,7 @@ from aiogram.types import CallbackQuery, Message
 from keyboards.confirmation import confirmation_keyboard
 from keyboards.main_menu import main_menu_keyboard
 from states.order import OrderStates
+from database.database import save_order
 
 router = Router()
 
@@ -54,16 +55,23 @@ async def invalid_order_details_handler(message: Message) -> None:
 async def confirm_order_handler(
     callback_query: CallbackQuery, state: FSMContext
 ) -> None:
+
     await callback_query.answer()
 
     data = await state.get_data()
     order_details = data.get("order_details")
 
+    save_order(
+        user_id=callback_query.from_user.id,
+        order_details=order_details,
+        status="confirmed",
+    )
+
     if isinstance(callback_query.message, Message):
         await callback_query.message.edit_reply_markup(reply_markup=None)
 
         await callback_query.message.answer(
-            f"✅ Your order has been confirmed.\n\n" f"Order details:\n{order_details}"
+            f" Your order has been confirmed.\n\n" f"Order details:\n{order_details}"
         )
 
     await state.clear()
@@ -79,7 +87,7 @@ async def cancel_order_handler(
         await callback_query.message.edit_reply_markup(reply_markup=None)
 
         await callback_query.message.answer(
-            "❌ Your order has been cancelled.", reply_markup=main_menu_keyboard
+            " Your order has been cancelled.", reply_markup=main_menu_keyboard
         )
 
     await state.clear()
