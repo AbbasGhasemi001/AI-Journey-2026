@@ -22,3 +22,18 @@ def save_order(user_id, order_details, status):
     VALUES (?, ?, ?)
     """, (user_id, order_details, status))
     connection.commit()
+
+def get_user_orders(user_id):
+    cursor.execute(
+        """
+        SELECT id, order_details, status, created_at
+        FROM orders
+        WHERE user_id = ?
+        ORDER BY created_at DESC
+        """,
+        (user_id,)
+    )
+
+    orders = cursor.fetchall()
+
+    return orders

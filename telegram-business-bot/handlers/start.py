@@ -6,7 +6,7 @@ from aiogram.types import CallbackQuery, Message
 from keyboards.confirmation import confirmation_keyboard
 from keyboards.main_menu import main_menu_keyboard
 from states.order import OrderStates
-from database.database import save_order
+from database.database import save_order, get_user_orders
 
 router = Router()
 
@@ -91,3 +91,24 @@ async def cancel_order_handler(
         )
 
     await state.clear()
+
+
+@router.callback_query(F.data == "my_orders")
+async def my_orders_handler(callback_query: CallbackQuery) -> None:
+    await callback_query.answer()
+
+    orders = get_user_orders(user_id=callback_query.from_user.id)
+
+    if not orders:
+        if isinstance(callback_query.message, Message):
+            await callback_query.message.answer("You don't have any orders yet.")
+    else:
+        for order in orders:
+            order_id, order_details, status, created_at = order
+            if isinstance(callback_query.message, Message):
+                await callback_query.message.answer(
+                    f"Order ID: {order_id}\n"
+                    f"Details: {order_details}\n"
+                    f"Status: {status}\n"
+                    f"Created At: {created_at}\n"
+                )
