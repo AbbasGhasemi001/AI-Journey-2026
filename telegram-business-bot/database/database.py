@@ -90,3 +90,59 @@ def get_all_support_tickets():
     tickets = cursor.fetchall()
 
     return tickets
+
+
+# =========================================================
+# NEW FUNCTIONS FOR PHASE B - STATUS MANAGEMENT
+# =========================================================
+
+def get_order_by_id(order_id):
+    """Get specific order by ID"""
+    cursor.execute(
+        """
+        SELECT id, user_id, order_details, status, created_at
+        FROM orders
+        WHERE id = ?
+        """,
+        (order_id,)
+    )
+    return cursor.fetchone()
+
+
+def get_ticket_by_id(ticket_id):
+    """Get specific ticket by ID"""
+    cursor.execute(
+        """
+        SELECT id, user_id, message, status, created_at
+        FROM support_tickets
+        WHERE id = ?
+        """,
+        (ticket_id,)
+    )
+    return cursor.fetchone()
+
+
+def update_order_status(order_id, new_status):
+    """Update order status by order_id"""
+    cursor.execute(
+        """
+        UPDATE orders
+        SET status = ?
+        WHERE id = ?
+        """,
+        (new_status, order_id)
+    )
+    connection.commit()
+
+
+def update_ticket_status(ticket_id, new_status):
+    """Update support ticket status by ticket_id"""
+    cursor.execute(
+        """
+        UPDATE support_tickets
+        SET status = ?
+        WHERE id = ?
+        """,
+        (new_status, ticket_id)
+    )
+    connection.commit()
