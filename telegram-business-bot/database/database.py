@@ -92,10 +92,6 @@ def get_all_support_tickets():
     return tickets
 
 
-# =========================================================
-# NEW FUNCTIONS FOR PHASE B - STATUS MANAGEMENT
-# =========================================================
-
 def get_order_by_id(order_id):
     """Get specific order by ID"""
     cursor.execute(
@@ -146,3 +142,24 @@ def update_ticket_status(ticket_id, new_status):
         (new_status, ticket_id)
     )
     connection.commit()
+
+
+def total_orders_count():
+    """Get total number of orders"""
+    cursor.execute("SELECT COUNT(*) FROM orders")
+    return cursor.fetchone()[0]
+
+def total_support_tickets_count():
+    """Get total number of support tickets"""
+    cursor.execute("SELECT COUNT(*) FROM support_tickets")
+    return cursor.fetchone()[0]
+
+def get_open_tickets_count():
+    """Get total number of open support tickets"""
+    cursor.execute("SELECT COUNT(*) FROM support_tickets WHERE status = 'open'")
+    return cursor.fetchone()[0]
+
+def order_status_count(status):
+    """Get count of orders by status"""
+    cursor.execute("SELECT COUNT(*) FROM orders WHERE status = ?", (status,))
+    return cursor.fetchone()[0]

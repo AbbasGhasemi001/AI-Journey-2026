@@ -14,6 +14,12 @@ admin_keyboard = InlineKeyboardMarkup(
                 text=" View Support Tickets",
                 callback_data="admin_view_tickets"
             )
+        ],
+        [
+            InlineKeyboardButton(
+                text=" View Statistics",
+                callback_data="admin_statistics"
+            )
         ]
     ]
 )

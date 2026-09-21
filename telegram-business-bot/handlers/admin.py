@@ -11,9 +11,14 @@ from database.database import (
     get_ticket_by_id,
     update_order_status,
     update_ticket_status,
+    total_orders_count,
+    total_support_tickets_count,
+    get_open_tickets_count,
+    order_status_count
 )
 from keyboards.admin import admin_keyboard
 from keyboards.status import order_status_keyboard, ticket_status_keyboard
+
 
 router = Router()
 
@@ -231,3 +236,40 @@ async def update_ticket_status_handler(callback_query: CallbackQuery) -> None:
             chat_id=callback_query.from_user.id,
             text=f"❌ Error updating ticket: {str(e)}"
         )
+
+
+#================================================
+#admin statistics
+#============================================
+
+@router.callback_query(F.data == "admin_statistics")
+async def admin_statistics_handler(callback_query: CallbackQuery) -> None:
+
+    await callback_query.answer()
+
+    if callback_query.from_user.id != ADMIN_ID:
+        await callback_query.bot.send_message(
+            chat_id=callback_query.from_user.id, text="❌ Access denied."
+        )
+        return
+
+    total_orders = total_orders_count()
+    total_tickets = total_support_tickets_count()
+    open_tickets = get_open_tickets_count()
+    order_status_counts = order_status_count()
+
+    stats_text = (
+        f"📊 Admin Statistics\n\n"
+        f"Total Orders: {total_orders}\n"
+        f"Total Support Tickets: {total_tickets}\n"
+        f"Open Support Tickets: {open_tickets}\n\n"
+        f"Order Status Counts:\n"
+    )
+
+    for status, count in order_status_counts.items():
+        stats_text += f"- {status}: {count}\n"
+
+    await callback_query.bot.send_message(
+        chat_id=callback_query.from_user.id,
+        text=stats_text
+    )
