@@ -144,22 +144,35 @@ def update_ticket_status(ticket_id, new_status):
     connection.commit()
 
 
-def total_orders_count():
-    """Get total number of orders"""
-    cursor.execute("SELECT COUNT(*) FROM orders")
+def get_total_orders_count():
+    cursor.execute("""
+        SELECT COUNT(*)
+        FROM orders
+    """)
     return cursor.fetchone()[0]
 
-def total_support_tickets_count():
-    """Get total number of support tickets"""
-    cursor.execute("SELECT COUNT(*) FROM support_tickets")
+
+def get_total_tickets_count():
+    cursor.execute("""
+        SELECT COUNT(*)
+        FROM support_tickets
+    """)
     return cursor.fetchone()[0]
+
 
 def get_open_tickets_count():
-    """Get total number of open support tickets"""
-    cursor.execute("SELECT COUNT(*) FROM support_tickets WHERE status = 'open'")
+    cursor.execute("""
+        SELECT COUNT(*)
+        FROM support_tickets
+        WHERE status = 'open'
+    """)
     return cursor.fetchone()[0]
 
-def order_status_count(status):
-    """Get count of orders by status"""
-    cursor.execute("SELECT COUNT(*) FROM orders WHERE status = ?", (status,))
-    return cursor.fetchone()[0]
+
+def get_orders_by_status():
+    cursor.execute("""
+        SELECT status, COUNT(*)
+        FROM orders
+        GROUP BY status
+    """)
+    return cursor.fetchall()
